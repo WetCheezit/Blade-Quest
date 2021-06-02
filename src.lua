@@ -1,4 +1,4 @@
-repeat wait() until game:IsLoaded()
+repeat wait() until game:IsLoaded() -- allows the script to be placed in auto execute
 
 wait(3)
 
@@ -13,10 +13,11 @@ end
 -- Player
 local Plr = game.Players.LocalPlayer
 local Char = Plr.Character
-local RootPart = Char.HumanoidRootPart 
+local RootPart = Char.HumanoidRootPart
 
 -- Tween service
 local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 
 -- Body Force/No Gravity
 local bv = Instance.new("BodyVelocity")
@@ -26,7 +27,7 @@ bv.P = 9000
 bv.Parent = RootPart
 
 -- Main auto farm
-game.RunService.Heartbeat:Connect(function()
+RunService.Heartbeat:Connect(function()
     local Origin = RootPart.Position
     local Target, Closest = nil, math.huge
     
@@ -54,17 +55,27 @@ game.RunService.Heartbeat:Connect(function()
         Char.Humanoid:ChangeState(10)
         
         if (Target.HumanoidRootPart and RootPart ~= nil) then
-            local Tp = TweenService:Create(RootPart, TweenInfo, {CFrame = CFrame.new(Vector3.new(Pos.X, Pos.Y + getgenv().client.settings.offset, Pos.Z))})
-            
-            Tp:Play()
-            
-            if (Target:FindFirstChildOfClass("Humanoid")) then
-                if (Target.Enemy.Health ~= 0) then
-                    game.ReplicatedStorage.RE:FireServer("Hit", Target, Target.HumanoidRootPart.Position, Target.HumanoidRootPart.Position)
+            local Tp = TweenService:Create(RootPart, TweenInfo, {
+                CFrame = CFrame.new(Vector3.new(Pos.X, Pos.Y - getgenv().client.settings.offset, Pos.Z))
+             })
 
+            local Tp2 = TweenService:Create(RootPart, TweenInfo, {
+                CFrame = CFrame.new(Vector3.new(Pos.X, Pos.Y + getgenv().client.settings.offset, Pos.Z))
+             })
+                
+                if (getgenv().client.settings.below) then
+                    Tp:Play()
+                else
+                    Tp2:Play()
+                end
+                
+                if (Target:FindFirstChildOfClass("Humanoid")) then
+                    if (Target.Enemy.Health ~= 0) then
+                    game.ReplicatedStorage.RE:FireServer("Hit", Target, Target.HumanoidRootPart.Position, Target.HumanoidRootPart.Position)
+    
                     game:GetService("ReplicatedStorage").Magic:FireServer("Damage")
                     game:GetService("ReplicatedStorage").Magic:FireServer("Support")
-                    
+                        
                 elseif (Target.Enemy.Health == 0) then
                     Target:Destroy()
                 end
