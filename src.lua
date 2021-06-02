@@ -2,6 +2,21 @@ repeat wait() until game:IsLoaded() -- allows the script to be placed in auto ex
 
 wait(3)
 
+-- Put the world settings here
+getgenv().client = {
+   settings = {
+       below = true, -- True for teleporting below the mob, false for above the mob. Both modes are useful depending on the level
+       offset = 6, -- Teleport offset. Recommend putting this at 5 - 8
+       teleportspeed = 125, -- Dynamic teleport speed. I recommend putting this anywhere from 125 - 150
+   },
+   autoplay = {
+       world = "Forest",
+       difficulty = "Easy",
+       friendsonly = true,
+       hardcore = true,
+   }
+}
+
 -- Lobby check
 for i, v in pairs(workspace.Enemies:GetChildren()) do
     if (v.Name == "Dummy") then
@@ -57,20 +72,20 @@ RunService.Heartbeat:Connect(function()
         if (Target.HumanoidRootPart and RootPart ~= nil) then
             local Tp = TweenService:Create(RootPart, TweenInfo, {
                 CFrame = CFrame.new(Vector3.new(Pos.X, Pos.Y - getgenv().client.settings.offset, Pos.Z))
-             })
+            })
 
             local Tp2 = TweenService:Create(RootPart, TweenInfo, {
                 CFrame = CFrame.new(Vector3.new(Pos.X, Pos.Y + getgenv().client.settings.offset, Pos.Z))
-             })
+            })
                 
-                if (getgenv().client.settings.below) then
-                    Tp:Play()
-                else
-                    Tp2:Play()
-                end
+            if (getgenv().client.settings.below) then
+                Tp:Play()
+            else
+                Tp2:Play()
+            end
                 
-                if (Target:FindFirstChildOfClass("Humanoid")) then
-                    if (Target.Enemy.Health ~= 0) then
+            if (Target:FindFirstChildOfClass("Humanoid")) then
+                if (Target.Enemy.Health ~= 0) then
                     game.ReplicatedStorage.RE:FireServer("Hit", Target, Target.HumanoidRootPart.Position, Target.HumanoidRootPart.Position)
     
                     game:GetService("ReplicatedStorage").Magic:FireServer("Damage")
