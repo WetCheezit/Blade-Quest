@@ -2,21 +2,6 @@ repeat wait() until game:IsLoaded() -- allows the script to be placed in auto ex
 
 wait(3)
 
--- Put the world settings here
-getgenv().client = {
-   settings = {
-       below = true, -- True for teleporting below the mob, false for above the mob. Both modes are useful depending on the level
-       offset = 6, -- Teleport offset. Recommend putting this at 5 - 8
-       teleportspeed = 125, -- Dynamic teleport speed. I recommend putting this anywhere from 125 - 150
-   },
-   autoplay = {
-       world = "Forest",
-       difficulty = "Easy",
-       friendsonly = true,
-       hardcore = true,
-   }
-}
-
 -- Lobby check
 for i, v in pairs(workspace.Enemies:GetChildren()) do
     if (v.Name == "Dummy") then
